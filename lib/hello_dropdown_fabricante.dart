@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:dropdownjson/FIPE/marcaapi.dart';
 import 'package:dropdownjson/FIPE/marcas.dart';
+import 'package:dropdownjson/FIPE/veiculos.dart';
+import 'package:dropdownjson/FIPE/veiculosapi.dart';
 import 'package:dropdownjson/fabricante.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +18,8 @@ class HelloDropDownFabricante extends StatefulWidget {
 class _HelloDropDownFabricanteState extends State<HelloDropDownFabricante> {
   Fabricante fabricante;
   Marcas marca;
+  Veiculos veiculo;
+  var veiculoId  = 0 ;
   var _tipo = ["carros", "motos", "caminhoes"];
 
   var _itemSelecionado = "carros";
@@ -36,36 +40,18 @@ class _HelloDropDownFabricanteState extends State<HelloDropDownFabricante> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
+          _comboTipo(),
+          SizedBox(
+            height: 20,
+          ),
           _comboMarcas(),
           SizedBox(
             height: 20,
           ),
-          FutureBuilder<List<Marcas>>(
-            initialData: [],
-            future: MarcasService.getMarcas(_itemSelecionado),
-            builder: (context, snapshot) {
-              // print("$snapshot.data");
-              List<Marcas> listaMarcas = snapshot.data;
-              return DropDown<Marcas>(
-                  listaMarcas, "Marcas", marca, _onMarcaChanged);
-            },
-          ),
+          // _comboVeiculos(),
           SizedBox(
             height: 20,
           ),
-          // FutureBuilder<List<Fabricante>>(
-          //     initialData: [],
-          //     future: FabricanteService.getFabricantes(_itemSelecionado),
-          //     builder: (context, snapshot) {
-          //       List<Fabricante> lista = snapshot.data;
-
-          //       return DropDown<Fabricante>(
-          //           lista, "Fabricantes", fabricante, _onFabricanteChanged);
-          //     }),
-          Text(
-            fabricante != null ? "Fabricante > ${fabricante.nome}" : "",
-            style: TextStyle(color: Colors.black, fontSize: 30),
-          )
         ],
       ),
     );
@@ -78,15 +64,15 @@ class _HelloDropDownFabricanteState extends State<HelloDropDownFabricante> {
     });
   }
 
-  void _onFabricanteChanged(Fabricante f) {
-    print("> ${f.nome} > ${f.id}");
-
+  void _onVeiculoChanged(Veiculos v){
     setState(() {
-      this.fabricante = f;
+      this.veiculo = v;
+      this.veiculoId = v.id;
+      print("Veiculo $v");
     });
   }
 
-  _comboMarcas() {
+  _comboTipo() {
     return DropdownButton<String>(
       items: _tipo.map((String dropDownStringItem) {
         return DropdownMenuItem<String>(
@@ -102,5 +88,42 @@ class _HelloDropDownFabricanteState extends State<HelloDropDownFabricante> {
       },
       value: _itemSelecionado,
     );
+  }
+
+  _comboMarcas() {
+    Future<List<Marcas>> future = MarcasService.getMarcas(_itemSelecionado);
+    return FutureBuilder<List<Marcas>>(
+      // initialData: [],
+      future: future,
+      builder: (context, snapshot) {
+        // print("$snapshot.data");
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        }
+        List<Marcas> listaMarcas = snapshot.data;
+        // print("Lista $listaMarcas");
+        return DropDown<Marcas>(listaMarcas, "Marcas", marca, _onMarcaChanged);
+      },
+    );
+  }
+
+  _comboVeiculos() {
+    if(veiculoId != 0 ){
+    Future<List<Veiculos>> future = VeiculoService.getVeiculos(_itemSelecionado, veiculoId);
+    return FutureBuilder<List<Veiculos>>(
+      // initialData: [],
+      future: future,
+      builder: (context, snapshot) {
+        // print("$snapshot.data");
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        }
+        List<Veiculos> listaMarcas = snapshot.data;
+        // print("Lista $listaMarcas");
+        
+        return DropDown<Veiculos>(listaMarcas, "Marcas", veiculo, _onVeiculoChanged);
+      },
+    );
+    }
   }
 }

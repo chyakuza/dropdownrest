@@ -1,14 +1,14 @@
 import 'package:dropdownjson/dropdown.dart';
 
-class Marcas extends DropDownItem {
+class Veiculos extends DropDownItem {
   String key;
   int id;
   String fipeName;
   String name;
 
-  Marcas({this.key, this.id, this.fipeName, this.name});
+  Veiculos({this.key, this.id, this.fipeName, this.name});
 
-  Marcas.fromJson(Map<String, dynamic> json) {
+  Veiculos.fromJson(Map<String, dynamic> json) {
     key = json['key'];
     id = json['id'];
     fipeName = json['fipe_name'];
@@ -37,7 +37,7 @@ class Marcas extends DropDownItem {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Marcas &&
+      other is Veiculos &&
           runtimeType == other.runtimeType &&
           id == other.id &&
           name == other.name;
