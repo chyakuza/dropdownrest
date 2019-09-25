@@ -4,9 +4,10 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Este projeto destina-se a um exemplo de como carregar um combobox(dropDownMenu) no flutter 
+com os dados recebidos de uma API:
 
-A few resources to get you started if this is your first Flutter project:
+API REST : http://fipeapi.appspot.com/ 
 
 - [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
