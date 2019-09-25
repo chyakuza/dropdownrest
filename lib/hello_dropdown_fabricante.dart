@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:dropdownjson/FIPE/marcaapi.dart';
@@ -16,10 +17,11 @@ class HelloDropDownFabricante extends StatefulWidget {
 }
 
 class _HelloDropDownFabricanteState extends State<HelloDropDownFabricante> {
+  final _streamController = StreamController<int>();
   Fabricante fabricante;
   Marcas marca;
   Veiculos veiculo;
-  var veiculoId  = 0 ;
+  var veiculoId = 0;
   var _tipo = ["carros", "motos", "caminhoes"];
 
   var _itemSelecionado = "carros";
@@ -48,7 +50,7 @@ class _HelloDropDownFabricanteState extends State<HelloDropDownFabricante> {
           SizedBox(
             height: 20,
           ),
-          // _comboVeiculos(),
+          _comboVeiculos(),
           SizedBox(
             height: 20,
           ),
@@ -60,16 +62,26 @@ class _HelloDropDownFabricanteState extends State<HelloDropDownFabricante> {
   void _onMarcaChanged(Marcas m) {
     setState(() {
       this.marca = m;
+      _loadVeiculos();
+      
       print("Selecionou $m");
     });
   }
 
-  void _onVeiculoChanged(Veiculos v){
+  void _onVeiculoChanged(Veiculos v) {
     setState(() {
+      
       this.veiculo = v;
       this.veiculoId = v.id;
       print("Veiculo $v");
     });
+  }
+
+  _loadVeiculos() async {
+    List<Veiculos> veiculo =
+        await VeiculoService.getVeiculos(_itemSelecionado, veiculoId);
+        
+        _streamController.add(m.id);
   }
 
   _comboTipo() {
@@ -108,22 +120,23 @@ class _HelloDropDownFabricanteState extends State<HelloDropDownFabricante> {
   }
 
   _comboVeiculos() {
-    if(veiculoId != 0 ){
-    Future<List<Veiculos>> future = VeiculoService.getVeiculos(_itemSelecionado, veiculoId);
-    return FutureBuilder<List<Veiculos>>(
-      // initialData: [],
-      future: future,
-      builder: (context, snapshot) {
-        // print("$snapshot.data");
-        if (!snapshot.hasData) {
-          return CircularProgressIndicator();
-        }
-        List<Veiculos> listaMarcas = snapshot.data;
-        // print("Lista $listaMarcas");
-        
-        return DropDown<Veiculos>(listaMarcas, "Marcas", veiculo, _onVeiculoChanged);
-      },
-    );
-    }
+    return StreamBuilder(
+        stream: _streamController.stream,
+        builder: (context, snapshot) {
+          // print("$snapshot.data");
+          if (snapshot.hasError) {
+            return Center(
+              child: Text("Não foi possivel carregar os dados do veiculo"),
+            );
+          }
+          if (!snapshot.hasData) {
+            return CircularProgressIndicator();
+          }
+          List<Veiculos> listaMarcas = snapshot.data;
+          // print("Lista $listaMarcas");
+
+          return DropDown<Veiculos>(
+              listaMarcas, "Marcas", veiculo, _onVeiculoChanged);
+        });
   }
 }
