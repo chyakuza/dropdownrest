@@ -5,7 +5,7 @@ import 'dart:convert' as convert;
 
 class VeiculoService  {
     
-    static Future<List<Veiculos>> getVeiculos(String marca, int id) async {
+    static Future<List<Veiculo>> getVeiculos(String marca, String id) async {
     try {
       String url = "http://fipeapi.appspot.com/api/1/$marca/veiculos/$id.json";
     print(url);
@@ -14,16 +14,15 @@ class VeiculoService  {
     final json = response.body;
     final map = convert.json.decode(json);
 
-    List<Veiculos> marcas = map.map<Veiculos>
-      ((json) => Veiculos.fromJson(json)).toList();
+    List<Veiculo> veiculos = map.map<Veiculo>
+      ((json) => Veiculo.fromJson(json)).toList();
     
-    // print("Marcas Services: $marcas");
+    //  print("Lista Veiculos: $veiculos");
 
-    return marcas;    
+    return veiculos;  
+
     } catch (e , exception ) {
       print("Erro : $e Excpt> $exception");
-      throw e;
-      
     }
     
   }
