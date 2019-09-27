@@ -1,7 +1,6 @@
+import 'package:dropdownjson/pages/splash.dart';
+import 'package:dropdownjson/widgets/theme_purple.dart';
 import 'package:flutter/material.dart';
-import 'package:dropdownjson/hello_dropdown_page1.dart';
-import 'package:dropdownjson/hello_dropdown_page2.dart';
-
 import 'hello_dropdown_fabricante.dart';
 
 void main() => runApp(MyApp());
@@ -11,8 +10,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: HelloDropDownFabricante(),
+      theme: myThemePurple,
+      home: SplashPerson(),//HelloDropDownFabricante(),
     );
   }
 }

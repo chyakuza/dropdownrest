@@ -18,7 +18,7 @@ class _ModeloAnoVeiculoState extends State<ModeloAnoVeiculo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Veiculos"),
+        title: Text("Modelos - TABELA FIPE"),
       ),
       body: _body(),
     );
@@ -61,10 +61,10 @@ class _ModeloAnoVeiculoState extends State<ModeloAnoVeiculo> {
               children: <Widget>[
                 ListTile(
                   title: Text(
-                    c.name,
+                    c.veiculo,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  subtitle: Text(c.veiculo),
+                  subtitle: Text("Marca: ${c.marca}  Ano: ${c.name.replaceAll("Gasolina", "")}"),
                   trailing: Icon(Icons.zoom_in),
                   onTap: () {
                     _onClickCarro(t, i , m , c.id.toString());
